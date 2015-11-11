@@ -108,21 +108,12 @@ class listener implements EventSubscriberInterface
 	*/
 	public function user_justification_registration_validate($event)
 	{
-			if (!$this->config['require_activation'] == USER_ACTIVATION_ADMIN)
-			{
-				return;
-			}
+		if ($event['submit'] && empty($event['data']['user_justification']) && $this->config['require_activation'] == USER_ACTIVATION_ADMIN)
+		{
 			$error_array = $event['error'];
-			//ensure justification reason isn't blank
-			if (!function_exists('validate_data'))
-			{
-				include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-			}
-			$validate_array = array(
-				'user_justification'	=> array('string', false, 1),
-			);
-			$error = validate_data($event['data'], $validate_array);
-			$event['error'] = array_merge($array, $error);
+			$error_array[] = $this->user->lang['TOO_SHORT_JUSTIFICATION'];
+			$event['error'] = $error_array;
+		}
 	}
 
 	/**
