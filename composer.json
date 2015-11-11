@@ -1,0 +1,28 @@
+{
+	"name": "rmcgirr83/activationjustification",
+	"type": "phpbb-extension",
+	"description": "How do you know whether or not the person who has just signed up for your board signed up just to spam it? Letting people justify their activation can help you decide exactly who should be activated and who shouldn't be. The extension is only active if user registration in the ACP is set to `By Admin`.",
+	"version": "1.0.0",
+	"time": "2015-02-09",
+	"keywords": ["phpbb", "extension", "registration", "activiation", "justification", "communication"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Rich McGirr",
+			"email": "rmcgirr83@gmail.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "Activation Justification",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.4-RC1,<3.2.*@dev"
+		}
+	}
+}

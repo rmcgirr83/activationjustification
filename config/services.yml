@@ -1,0 +1,12 @@
+services:
+    rmcgirr83.activationjustification.listener:
+        class: rmcgirr83\activationjustification\event\listener
+        arguments:
+            - @config		
+            - @request
+            - @template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }
