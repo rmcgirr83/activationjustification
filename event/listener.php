@@ -101,10 +101,13 @@ class listener implements EventSubscriberInterface
 	*/
 	public function user_justification_display($event)
 	{
+		if (!$this->auth->acl_get('a_user'))
+		{
+			return;
+		}
 		$this->data		= $event['member'];
 		$this->user_id	= (int) $this->data['user_id'];
-
-		if ($this->data['user_type'] != USER_INACTIVE && $this->data['user_inactive_reason'] != INACTIVE_REGISTER && !$this->auth->acl_get('a_user'))
+		if ($this->data['user_type'] != USER_INACTIVE && $this->data['user_inactive_reason'] != INACTIVE_REGISTER)
 		{
 			return;
 		}
