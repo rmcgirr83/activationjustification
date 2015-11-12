@@ -239,7 +239,7 @@ class listener implements EventSubscriberInterface
 
 		$messenger->template('admin_welcome_activated', $user['user_lang']);
 
-		$messenger->to($user['email'], $user['username']);
+		$messenger->to($user['user_email'], $user['username']);
 
 		$messenger->anti_abuse_headers($this->config, $this->user);
 
