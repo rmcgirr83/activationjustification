@@ -3,7 +3,8 @@ services:
         class: rmcgirr83\activationjustification\event\listener
         arguments:
             - @auth
-            - @config		
+            - @config
+            - @log			
             - @request
             - @template
             - @user

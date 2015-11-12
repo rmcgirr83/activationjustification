@@ -20,11 +20,24 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
+	/**
+	 * Target user data
+	 */
+	private $data = array();
+
+	/**
+	 * Target user id
+	 */
+	private $user_id = 0;
+
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
 	/** @var \phpbb\config\config */
 	protected $config;
+
+	/** @var \phpbb\log\log */
+	protected $log;
 
 	/** @var \phpbb\request\request */
 	protected $request;
@@ -44,6 +57,7 @@ class listener implements EventSubscriberInterface
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
+		\phpbb\log\log $log,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
@@ -52,6 +66,7 @@ class listener implements EventSubscriberInterface
 	{
 		$this->auth = $auth;
 		$this->config = $config;
+		$this->log = $log;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -85,15 +100,66 @@ class listener implements EventSubscriberInterface
 	*/
 	public function user_justification_display($event)
 	{
-		if ($event['member']['user_type'] == USER_INACTIVE && $event['member']['user_inactive_reason'] == INACTIVE_REGISTER && $this->auth->acl_gets('a_'))
+		$this->data		= $event['member'];
+		$this->user_id	= (int) $this->data['user_id'];
+
+		if ($this->data['user_type'] != USER_INACTIVE && $this->data['user_inactive_reason'] != INACTIVE_REGISTER && !$this->auth->acl_get('a_user'))
 		{
-			$this->user->add_lang_ext('rmcgirr83/activationjustification', 'common');
+			return;
+		}
+
+		$this->user->add_lang_ext('rmcgirr83/activationjustification', 'common');
+
+		$aj_result = $this->request->variable('aj_res', '');
+		if ($aj_result == 'success')
+		{
+			$aj_message = $this->user->lang['ACTIVATED_SUCCESS'];
 
 			$this->template->assign_vars(array(
-				'JUSTIFICATION'		=> empty($event['member']['user_justification']) ? $this->user->lang['NO_JUSTIFICATION'] : $event['member']['user_justification'],
-				'S_JUSTIFY'			=> true,
+				'AJ_STYLE'		=> (($aj_result == 'success') ? 'green' : '#a92c2c') . '; color: white;"',
+				'AJ_MESSAGE'	=> $aj_message,
 			));
 		}
+
+		if (!$this->request->is_set('aj') || ($this->request->is_set('aj') && $this->request->is_set('confirm_key') && !confirm_box(true)))
+		{
+			$params = array(
+				'mode'	=> 'viewprofile',
+				'u'		=> $this->user_id,
+				'aj'	=> 1,
+			);
+
+			$this->template->assign_vars(array(
+				'JUSTIFICATION'		=> empty($this->data['user_justification']) ? $this->user->lang['NO_JUSTIFICATION'] : $this->data['user_justification'],
+				'U_ACTIVATE'		=> append_sid($this->root_path . 'memberlist.' . $this->php_ext, $params),
+				'S_JUSTIFY'			=> true,
+			));
+			return;
+		}
+
+		// Time to activate a user. But are you sure?
+		if (!confirm_box(true))
+		{
+			$hidden_fields = array(
+				'mode'				=> 'viewprofile',
+			);
+			$message = sprintf($this->user->lang['SURE_ACTIVATE'], $this->data['username']);
+			confirm_box(false, $message, build_hidden_fields($hidden_fields));
+		}
+		$this->user_justification_activate();
+
+		// The page needs to be reloaded to show the new status.
+		$args = array(
+			'mode'		=> 'viewprofile',
+			'u'			=> $this->user_id,
+			'aj_res'	=> 'success',
+		);
+
+		$url	= generate_board_url();
+		$url	.= ((substr($url, -1) == '/') ? '' : '/') . 'memberlist.' . $this->php_ext;
+		$url	= append_sid($url, $args);
+
+		redirect($url);
 	}
 
 	/**
@@ -114,6 +180,7 @@ class listener implements EventSubscriberInterface
 
 		$this->template->assign_vars(array(
 			'JUSTIFICATION'		=> $event['data']['user_justification'],
+			'S_JUSTIFY'			=> ($this->config['require_activation'] == USER_ACTIVATION_ADMIN) ? true : false,
 		));
 	}
 
@@ -144,7 +211,46 @@ class listener implements EventSubscriberInterface
 	public function user_justification_registration_sql($event)
 	{
 		$event['user_row'] = array_merge($event['user_row'], array(
-				'user_justification' => $this->request->variable('user_justification', '', true),
+				'user_justification' => $this->request->variable('justify', '', true),
 		));
+	}
+
+	/**
+	* Activate user
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	private function user_justification_activate()
+	{
+		$user = $this->data;
+
+		if (!function_exists('user_active_flip'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+		if (!class_exists('messenger'))
+		{
+			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+		}
+		user_active_flip('activate', $user['user_id']);
+		$messenger = new \messenger(false);
+
+		$messenger->template('admin_welcome_activated', $user['user_lang']);
+
+		$messenger->to($user['email'], $user['username']);
+
+		$messenger->anti_abuse_headers($this->config, $this->user);
+
+		$messenger->assign_vars(array(
+			'USERNAME'	=> htmlspecialchars_decode($user['username']))
+		);
+
+		$messenger->send(NOTIFY_EMAIL);
+
+		$messenger->save_queue();
+
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', time(), array($user['username']));
 	}
 }

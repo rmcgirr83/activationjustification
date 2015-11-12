@@ -27,7 +27,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 		return array(
 			'add_columns'	=> array(
 				$this->table_prefix . 'users'	=> array(
-					'user_justification'	=> array('MTEXT', ''),
+					'user_justification'	=> array('VCHAR', ''),
 				),
 			),
 		);

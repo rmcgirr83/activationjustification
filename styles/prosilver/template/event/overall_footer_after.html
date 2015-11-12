@@ -1,0 +1,18 @@
+<!-- IF S_JUSTIFY -->
+<script type="text/javascript">
+$(function() {
+    $("textarea[maxlength]").bind('input propertychange', function() {
+        var maxLength = $(this).attr('maxlength');
+		var charLimit = 255;
+
+        var newlines = ($(this).val().match(/\n/g) || []).length
+        if ($(this).val().length + newlines > maxLength) {
+            $(this).val($(this).val().substring(0, maxLength - newlines));
+        }
+		else {
+			$("#countdown").text(charLimit - $(this).val().length + newlines);
+		}
+    })
+});
+</script>
+<!-- ENDIF -->
