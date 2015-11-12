@@ -88,6 +88,7 @@ class listener implements EventSubscriberInterface
 			'core.ucp_register_data_after'		=> 'user_justification_registration_validate',
 			'core.ucp_register_user_row_after'	=> 'user_justification_registration_sql',
 			'core.memberlist_view_profile'		=> 'user_justification_display',
+			'core.acp_users_display_overview'	=> 'acp_user_justification_display',
 		);
 	}
 
@@ -212,6 +213,22 @@ class listener implements EventSubscriberInterface
 	{
 		$event['user_row'] = array_merge($event['user_row'], array(
 				'user_justification' => $this->request->variable('justify', '', true),
+		));
+	}
+
+	/**
+	* Display Justification in ACP
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function acp_user_justification_display($event)
+	{
+		$this->user->add_lang_ext('rmcgirr83/activationjustification', 'common');
+
+		$this->template->assign_vars(array(
+			'USER_JUSTIFICATION'		=> empty($event['user_row']['user_justification']) ? $this->user->lang['NO_JUSTIFICATION'] : $event['user_row']['user_justification'],
 		));
 	}
 
