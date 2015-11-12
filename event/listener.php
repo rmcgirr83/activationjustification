@@ -20,6 +20,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
+	/** @var \phpbb\auth\auth */
+	protected $auth;
+
 	/** @var \phpbb\config\config */
 	protected $config;
 
@@ -38,14 +41,8 @@ class listener implements EventSubscriberInterface
 	/** @var string phpEx */
 	protected $php_ext;
 
-	/**
-	* the path to the images directory
-	*
-	*@var string
-	*/
-	protected $genders_path;
-
 	public function __construct(
+		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
@@ -53,6 +50,7 @@ class listener implements EventSubscriberInterface
 		$phpbb_root_path,
 		$php_ext)
 	{
+		$this->auth = $auth;
 		$this->config = $config;
 		$this->request = $request;
 		$this->template = $template;
@@ -71,10 +69,31 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.ucp_register_data_before'				=> 'user_justification_registration',
-			'core.ucp_register_data_after'				=> 'user_justification_registration_validate',
-			'core.ucp_register_user_row_after'			=> 'user_justification_registration_sql',
+			'core.ucp_register_data_before'		=> 'user_justification_registration',
+			'core.ucp_register_data_after'		=> 'user_justification_registration_validate',
+			'core.ucp_register_user_row_after'	=> 'user_justification_registration_sql',
+			'core.memberlist_view_profile'		=> 'user_justification_display',
 		);
+	}
+
+	/**
+	* Allow justification to display
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function user_justification_display($event)
+	{
+		if ($event['member']['user_type'] == USER_INACTIVE && $event['member']['user_inactive_reason'] == INACTIVE_REGISTER && $this->auth->acl_gets('a_'))
+		{
+			$this->user->add_lang_ext('rmcgirr83/activationjustification', 'common');
+
+			$this->template->assign_vars(array(
+				'JUSTIFICATION'		=> empty($event['member']['user_justification']) ? $this->user->lang['NO_JUSTIFICATION'] : $event['member']['user_justification'],
+				'S_JUSTIFY'			=> true,
+			));
+		}
 	}
 
 	/**
@@ -95,7 +114,6 @@ class listener implements EventSubscriberInterface
 
 		$this->template->assign_vars(array(
 			'JUSTIFICATION'		=> $event['data']['user_justification'],
-			'S_JUSTIFY'			=> ($this->config['require_activation'] == USER_ACTIVATION_ADMIN) ? true : false,
 		));
 	}
 
