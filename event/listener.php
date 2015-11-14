@@ -271,6 +271,6 @@ class listener implements EventSubscriberInterface
 
 		$messenger->save_queue();
 
-		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', time(), array($user['username']));
+		$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', time(), array($user['username']));
 	}
 }
