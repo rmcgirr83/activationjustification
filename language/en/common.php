@@ -41,5 +41,5 @@ $lang = array_merge($lang, array(
 	'JUSTIFY_YOU_HAVE'			=> 'You have',
 	'JUSTIFY_CHARS_REMAINING'	=> 'characters remaining.',
 	'SURE_ACTIVATE'				=> 'Are you sure you want to activate the user <strong>%s</strong>?', // %s will be a username.
-	'ACTIVATED_SUCCESS'			=> '<strong>User was activated</strong>',
+	'ACTIVATED_SUCCESS'			=> '<strong>User is activated</strong>',
 ));
