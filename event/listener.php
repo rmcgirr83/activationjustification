@@ -107,22 +107,24 @@ class listener implements EventSubscriberInterface
 		}
 		$this->data		= $event['member'];
 		$this->user_id	= (int) $this->data['user_id'];
-		if ($this->data['user_type'] != USER_INACTIVE && $this->data['user_inactive_reason'] != INACTIVE_REGISTER)
-		{
-			return;
-		}
 
 		$this->user->add_lang_ext('rmcgirr83/activationjustification', 'common');
 
-		$aj_result = $this->request->variable('aj_res', '');
-		if ($aj_result == 'success')
+		if ($this->data['user_type'] != USER_INACTIVE && $this->data['user_inactive_reason'] != INACTIVE_REGISTER)
 		{
-			$aj_message = $this->user->lang['ACTIVATED_SUCCESS'];
+			$aj_result = $this->request->variable('aj_res', '');
+			if (!empty($aj_result))
+			{
+				if ($aj_result == 'success')
+				{
+					$aj_message = $this->user->lang('ACTIVATED_SUCCESS');
 
-			$this->template->assign_vars(array(
-				'AJ_STYLE'		=> (($aj_result == 'success') ? 'green' : '#a92c2c') . '; color: white;"',
-				'AJ_MESSAGE'	=> $aj_message,
-			));
+					$this->template->assign_vars(array(
+						'AJ_MESSAGE'		=> $aj_message,
+					));
+				}
+			}
+			return;
 		}
 
 		if (!$this->request->is_set('aj') || ($this->request->is_set('aj') && $this->request->is_set('confirm_key') && !confirm_box(true)))
@@ -134,7 +136,7 @@ class listener implements EventSubscriberInterface
 			);
 
 			$this->template->assign_vars(array(
-				'JUSTIFICATION'		=> empty($this->data['user_justification']) ? $this->user->lang['NO_JUSTIFICATION'] : $this->data['user_justification'],
+				'JUSTIFICATION'		=> empty($this->data['user_justification']) ? $this->user->lang('NO_JUSTIFICATION') : $this->data['user_justification'],
 				'U_ACTIVATE'		=> append_sid($this->root_path . 'memberlist.' . $this->php_ext, $params),
 				'S_JUSTIFY'			=> true,
 			));
@@ -147,7 +149,7 @@ class listener implements EventSubscriberInterface
 			$hidden_fields = array(
 				'mode'				=> 'viewprofile',
 			);
-			$message = sprintf($this->user->lang['SURE_ACTIVATE'], $this->data['username']);
+			$message = $this->user->lang('SURE_ACTIVATE', $this->data['username']);
 			confirm_box(false, $message, build_hidden_fields($hidden_fields));
 		}
 		$this->user_justification_activate();
@@ -200,7 +202,7 @@ class listener implements EventSubscriberInterface
 		if ($event['submit'] && empty($event['data']['user_justification']) && $this->config['require_activation'] == USER_ACTIVATION_ADMIN)
 		{
 			$error_array = $event['error'];
-			$error_array[] = $this->user->lang['TOO_SHORT_JUSTIFICATION'];
+			$error_array[] = $this->user->lang('TOO_SHORT_JUSTIFICATION');
 			$event['error'] = $error_array;
 		}
 	}
@@ -231,7 +233,7 @@ class listener implements EventSubscriberInterface
 		$this->user->add_lang_ext('rmcgirr83/activationjustification', 'common');
 
 		$this->template->assign_vars(array(
-			'USER_JUSTIFICATION'		=> empty($event['user_row']['user_justification']) ? $this->user->lang['NO_JUSTIFICATION'] : $event['user_row']['user_justification'],
+			'USER_JUSTIFICATION'		=> empty($event['user_row']['user_justification']) ? $this->user->lang('NO_JUSTIFICATION') : $event['user_row']['user_justification'],
 		));
 	}
 
@@ -270,7 +272,6 @@ class listener implements EventSubscriberInterface
 		$messenger->send(NOTIFY_EMAIL);
 
 		$messenger->save_queue();
-
 		$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', time(), array($user['username']));
 	}
 }

@@ -1,15 +1,15 @@
 <!-- IF AJ_MESSAGE -->
-<div class="panel bg2" style="background-color: {AJ_STYLE};">
-	<div class="inner">
-		<span>{AJ_MESSAGE}</span>
+<div class="panel bg1">
+	<div class="inner" style="text-align:center;">
+		<h4>{AJ_MESSAGE}</h4>
 	</div>
 </div>
 <!-- ELSEIF S_JUSTIFY -->
-<div class="panel bg2">
+<div class="panel">
 	<div class="inner">
 		<form id="aj-form" method="post" action="{U_ACTIVATE}">
-			<dl class="bg2">
-				<dt><label>{L_ACTIVATION_JUSTIFICATION}{L_COLON}</label>{JUSTIFICATION}</dt>
+			<dl>
+				<dt><h4>{L_ACTIVATION_JUSTIFICATION}{L_COLON} {JUSTIFICATION}</h4></dt>
 				<dd></dd>
 			</dl>
 			<fieldset class="submit-buttons">
