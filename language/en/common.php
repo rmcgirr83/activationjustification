@@ -34,7 +34,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'ACTIVATION_JUSTIFICATION'	=> '<strong>Activation Justification</strong>',
-	'JUSTIFICATION_EXPLAIN'		=> 'Your activation is contingent upon your <a href="http://en.wikipedia.org/wiki/Raison_d’être">Raison d’être</a>.',
+	'JUSTIFICATION_EXPLAIN'		=> 'Your activation is contingent upon your reason for wanting to join.',
 	'JUSTIFICATION'				=> 'Justification',
 	'NO_JUSTIFICATION'			=> '<em>None</em>',
 	'TOO_SHORT_JUSTIFICATION'	=> 'The justification reason you entered is too short.',

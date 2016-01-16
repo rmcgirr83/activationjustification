@@ -39,6 +39,9 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\log\log */
 	protected $log;
 
+	/** @var \phpbb\notification\manager */
+	protected $notification_manager;
+
 	/** @var \phpbb\request\request */
 	protected $request;
 
@@ -58,6 +61,7 @@ class listener implements EventSubscriberInterface
 		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
 		\phpbb\log\log $log,
+		\phpbb\notification\manager $notification_manager,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
@@ -67,6 +71,7 @@ class listener implements EventSubscriberInterface
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->log = $log;
+		$this->notification_manager = $notification_manager;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -272,6 +277,9 @@ class listener implements EventSubscriberInterface
 		$messenger->send(NOTIFY_EMAIL);
 
 		$messenger->save_queue();
+		// Remove the notification
+		$this->notification_manager->delete_notifications('notification.type.admin_activate_user', $user['user_id']);
+
 		$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', time(), array($user['username']));
 	}
 }

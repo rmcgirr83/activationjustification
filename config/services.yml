@@ -4,7 +4,8 @@ services:
         arguments:
             - @auth
             - @config
-            - @log			
+            - @log
+            - @notification_manager
             - @request
             - @template
             - @user
