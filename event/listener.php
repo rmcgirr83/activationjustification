@@ -36,6 +36,9 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \phpbb\db\driver\driver */
+	protected $db;
+
 	/** @var \phpbb\log\log */
 	protected $log;
 
@@ -60,6 +63,7 @@ class listener implements EventSubscriberInterface
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
+		\phpbb\db\driver\driver_interface $db,
 		\phpbb\log\log $log,
 		\phpbb\notification\manager $notification_manager,
 		\phpbb\request\request $request,
@@ -70,6 +74,7 @@ class listener implements EventSubscriberInterface
 	{
 		$this->auth = $auth;
 		$this->config = $config;
+		$this->db = $db;
 		$this->log = $log;
 		$this->notification_manager = $notification_manager;
 		$this->request = $request;
@@ -280,6 +285,14 @@ class listener implements EventSubscriberInterface
 		// Remove the notification
 		$this->notification_manager->delete_notifications('notification.type.admin_activate_user', $user['user_id']);
 
-		$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', time(), array($user['username']));
+		$sql = 'UPDATE ' . USERS_TABLE . "
+			SET user_actkey = ''
+			WHERE user_id = {$user['user_id']}";
+		$this->db->sql_query($sql);
+
+		// Create the correct logs
+
+		$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE_USER', false, array('reportee_id' => $user['user_id']));
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', false, array($user['username']));
 	}
 }

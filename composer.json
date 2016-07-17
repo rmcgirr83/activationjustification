@@ -1,32 +1,40 @@
 {
-	"name": "rmcgirr83/activationjustification",
-	"type": "phpbb-extension",
-	"description": "How do you know whether or not the person who has just signed up for your board signed up just to spam it? Letting people justify their activation can help you decide exactly who should be activated and who shouldn't be. The extension is only active if user registration in the ACP is set to `By Admin`.",
-	"version": "1.0.1",
-	"time": "2016-01-16",
-	"keywords": ["phpbb", "extension", "registration", "activiation", "justification", "communication"],
-	"license": "GPL-2.0",
-	"authors": [
-		{
-			"name": "Rich McGirr",
-			"role": "Developer"
-		}
-	],
-	"require": {
-		"php": ">=5.3.3"
-	},
-	"require-dev": {
-		"phpbb/epv": "dev-master"
-	},
-	"extra": {
-		"display-name": "Activation Justification",
-		"soft-require": {
-			"phpbb/phpbb": ">=3.1.4-RC1,<3.2.0"
-		},
+    "name": "rmcgirr83/activationjustification",
+    "type": "phpbb-extension",
+    "description": "How do you know whether or not the person who has just signed up for your board signed up just to spam it? Letting people justify their activation can help you decide exactly who should be activated and who shouldn't be. The extension is only active if user registration in the ACP is set to `By Admin`.",
+    "version": "1.0.2",
+    "time": "2016-01-16",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "registration",
+        "activiation",
+        "justification",
+        "communication"
+    ],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Rich McGirr",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.4-RC1,<3.3@dev"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "Activation Justification",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.4-RC1,<3.3@dev"
+        },
         "version-check": {
             "host": "www.phpbb.com",
             "directory": "/customise/db/extension/phpbb_3.1_activation_justification",
             "filename": "version_check"
         }
-	}
+    }
 }
