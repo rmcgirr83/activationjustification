@@ -3,7 +3,7 @@ activationjustification
 
 How do you know whether or not the person who has just signed up for your board signed up just to spam it? Letting people justify their activation can help you decide exactly who should be activated and who shouldn't be. The extension is only active if user registration in the ACP is set to "By Admin". A port of the phpBB 3.0.x mod of the same name.
 
-[![Build Status](https://travis-ci.org/rmcgirr83/activationjustification.svg?branch=master)](https://travis-ci.org/rmcgirr83/activationjustification)
+[![Build Status](https://travis-ci.com/rmcgirr83/activationjustification.svg?branch=master)](https://travis-ci.com/rmcgirr83/activationjustification)
 ## Installation
 
 ### 1. clone
