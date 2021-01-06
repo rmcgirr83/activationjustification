@@ -1,6 +1,14 @@
-<!-- IF S_JUSTIFY -->
-<script type="text/javascript">
-$(function() {
+/**
+*
+* @package Activation Justification
+* @copyright (c) 2021 RMcGirr83
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+*/
+
+(function($) { // Avoid conflicts with other libraries
+	'use strict';
+
     $("textarea[maxlength]").bind('input propertychange', function() {
         var maxLength = $(this).attr('maxlength');
 		var charLimit = 255;
@@ -12,7 +20,5 @@ $(function() {
 		else {
 			$("#countdown").text(charLimit - $(this).val().length + newlines);
 		}
-    })
-});
-</script>
-<!-- ENDIF -->
+    });
+})(jQuery); // Avoid conflicts with other libraries

@@ -1,6 +1,6 @@
-<!-- IF S_JUSTIFY -->
+{% if S_JUSTIFY %}
 <dl>
-	<dt><label for="justify">{L_JUSTIFICATION}{L_COLON} *</label><br /><span>{L_JUSTIFICATION_EXPLAIN}</span></dt>
-	<dd><textarea name="justify" id="justify" class="medium" maxlength="255">{JUSTIFICATION}</textarea><br />{L_JUSTIFY_YOU_HAVE} <span id="countdown">255</span> {L_JUSTIFY_CHARS_REMAINING}</dd>
+	<dt><label for="justify">{{ lang('JUSTIFICATION') }}{{ lang('COLON') }} *</label><br /><span>{{ lang('JUSTIFICATION_EXPLAIN') }}</span></dt>
+	<dd><textarea name="justify" id="justify" class="medium" maxlength="255">{{ JUSTIFICATION }}</textarea><br />{{ lang('JUSTIFY_YOU_HAVE') }} <span id="countdown">255</span> {{ lang('JUSTIFY_CHARS_REMAINING') }}</dd>
 </dl>
-<!-- ENDIF -->
+{% endif %}

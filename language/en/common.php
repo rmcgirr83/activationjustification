@@ -15,7 +15,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -32,7 +32,7 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste:
 // ’ » “ ” …
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACTIVATION_JUSTIFICATION'	=> '<strong>Activation Justification</strong>',
 	'JUSTIFICATION_EXPLAIN'		=> 'Your activation is contingent upon your reason for wanting to join.',
 	'JUSTIFICATION'				=> 'Justification',
@@ -42,4 +42,4 @@ $lang = array_merge($lang, array(
 	'JUSTIFY_CHARS_REMAINING'	=> 'characters remaining.',
 	'SURE_ACTIVATE'				=> 'Are you sure you want to activate the user <strong>%s</strong>?', // %s will be a username.
 	'ACTIVATED_SUCCESS'			=> '<strong>User is activated</strong>',
-));
+]);
