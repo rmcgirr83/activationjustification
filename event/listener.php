@@ -35,11 +35,6 @@ class listener implements EventSubscriberInterface
 	 */
 	private $data = array();
 
-	/**
-	 * Target user id
-	 */
-	private $user_id = 0;
-
 	/** @var auth $auth */
 	protected $auth;
 
@@ -67,10 +62,10 @@ class listener implements EventSubscriberInterface
 	/** @var user $user*/
 	protected $user;
 
-	/** @var string phpBB root path */
-	protected $phpbb_root_path;
+	/** @var string root_path $root_path */
+	protected $root_path;
 
-	/** @var string phpEx */
+	/** @var string php_ext $php_ext */
 	protected $php_ext;
 
 	public function __construct(
@@ -83,7 +78,7 @@ class listener implements EventSubscriberInterface
 		request $request,
 		template $template,
 		user $user,
-		string $phpbb_root_path,
+		string $root_path,
 		string $php_ext)
 	{
 		$this->auth = $auth;
@@ -95,7 +90,7 @@ class listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->root_path = $phpbb_root_path;
+		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
 
@@ -302,11 +297,10 @@ class listener implements EventSubscriberInterface
 
 		$sql = 'UPDATE ' . USERS_TABLE . "
 			SET user_actkey = ''
-			WHERE user_id = {$user['user_id']}";
+			WHERE user_id = " . (int) $user['user_id'];
 		$this->db->sql_query($sql);
 
 		// Create the correct logs
-
 		$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE_USER', false, array('reportee_id' => $user['user_id']));
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE', false, array($user['username']));
 	}
