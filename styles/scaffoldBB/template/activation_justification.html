@@ -1,0 +1,6 @@
+{% if S_JUSTIFY %}
+<dl class="row gx-0 mb-1">
+	<dt class="col-md-2 mb-1"><label for="justify">{{ lang('JUSTIFICATION') }}{{ lang('COLON') }} *</label><br /><small class="fw-normal">{{ lang('JUSTIFICATION_EXPLAIN') }}</small></dt>
+	<dd class="col-md-auto mb-1"><textarea class="form-control form-control-sm medium" name="justify" id="justify" class="medium" maxlength="255">{{ JUSTIFICATION }}</textarea><br />{{ lang('JUSTIFY_YOU_HAVE') }} <span id="countdown">255</span> {{ lang('JUSTIFY_CHARS_REMAINING') }}</dd>
+</dl>
+{% endif %}
