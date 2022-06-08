@@ -1,0 +1,21 @@
+{% if AJ_MESSAGE %}
+<div class="panel bg1 bg-secondary bg-opacity-10 rounded-3 p-2 mb-1">
+	<div class="inner" style="text-align:center;">
+		<h4 class="fs-6">{{ AJ_MESSAGE }}</h4>
+	</div>
+</div>
+{% elseif S_JUSTIFY %}
+<div class="panel bg-light rounded-3 p-2 mb-1">
+	<div class="inner">
+		<form id="aj-form" method="post" action="{{ U_ACTIVATE }}">
+			<dl>
+				<dt><h4 class="fs-6">{{ lang('ACTIVATION_JUSTIFICATION') }}{{ lang('COLON') }} {{ JUSTIFICATION }}</h4></dt>
+				<dd></dd>
+			</dl>
+			<fieldset class="submit-buttons d-flex justify-content-center">
+				<input class="btn btn-primary btn-sm button fw-bold button1" type="submit" id="submit" name="submit" value="{{ lang('ACTIVATE') }}" />
+			</fieldset>
+		</form>
+	</div>
+</div>
+{% endif %}
