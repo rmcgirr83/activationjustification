@@ -35,37 +35,37 @@ class listener implements EventSubscriberInterface
 	 */
 	private $data = array();
 
-	/** @var auth $auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var config $config */
+	/** @var config */
 	protected $config;
 
-	/** @var db $db */
+	/** @var db */
 	protected $db;
 
-	/** @var language $language */
+	/** @var language */
 	protected $language;
 
-	/** @var log $log */
+	/** @var log */
 	protected $log;
 
-	/** @var notification_manager $notification_manager */
+	/** @var notification_manager */
 	protected $notification_manager;
 
-	/** @var request $request */
+	/** @var request */
 	protected $request;
 
-	/** @var template $template */
+	/** @var template */
 	protected $template;
 
-	/** @var user $user*/
+	/** @var user */
 	protected $user;
 
-	/** @var string root_path $root_path */
+	/** @var string root_path */
 	protected $root_path;
 
-	/** @var string php_ext $php_ext */
+	/** @var string php_ext */
 	protected $php_ext;
 
 	public function __construct(
